@@ -215,8 +215,8 @@ const displayController = (() => {
 
     const reActivateBoard = () => {
         wrapper.classList.remove('inactive');
-        document.getElementById('result-field').textContent  = ""
-        playAgain.style.display = "block"
+        document.getElementById('result-field').textContent =  ""
+        playAgain.style.display = "none"
     }
 
     const deactivateBoard = () => {
