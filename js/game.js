@@ -8,9 +8,11 @@ let winningConditions = [
                             [0, 4, 8], [2,4,6] 
                         ]
 
+// Game board module 
 const gameBoard = (() => {
     let board = ["", "", "", "", "", "", "", "", ""]
-
+    // Marks the spot in the array 
+    // and calls the display controller for updating the display.
     const markBoard = (index) => {
         if(board[index].length == 0){
             board[index] = currentPlayer.marker
@@ -20,15 +22,22 @@ const gameBoard = (() => {
     const boardIsFull = () => {
         return board.every(square => square.length > 0)
     }
+    const clearBoard = () => {
+        for(let i = 0; i < board.length; i++){
+            board[i] = ""
+        }
+    }
 
 
     return {
         markBoard,
         boardIsFull, 
-        board
+        board, 
+        clearBoard
     }
 })();
 
+// AI player module
 const AI = (() => {
     let marker = "O"
     let minimaxScores = {
@@ -37,24 +46,20 @@ const AI = (() => {
         tie: 0
     }
 
-    const selectedSpots = () => {
-        let arr = []
-        for(let i = 0; i < gameBoard.board.length; i++){
-            if(gameBoard.board[i] == marker){
-                arr.push(i)
-            }
-        }
-        return arr
-    }
-
     const play = () => {
         let bestScore = -Infinity;
         let move;
+        // iterating over the board
         for(let i = 0; i < 9; i++){
+            // checking if the current spot is available
             if(gameBoard.board[i] == ""){
+                // temporarily marks the spot
                 gameBoard.board[i] = "O"
+                // calls the minimax function with temporary move
                 let score = minimax(gameBoard.board, 0, false);
+                // removes mark
                 gameBoard.board[i] = ""
+                // checks if it's the desirable move 
                 if (score > bestScore){
                     bestScore = score;
                     move = i
@@ -63,10 +68,12 @@ const AI = (() => {
         }
         gameBoard.markBoard(move);
         currentPlayer = playerOne;
+        game.checkGameStatus();
     }
-
+    // minimax algorithm
     const minimax = (board, depth, isMaximizing) => {
         let result = game.checkWinner();
+        // base case for the recursive call
         if(result !== undefined){
             return minimaxScores[result]
         }
@@ -102,7 +109,6 @@ const AI = (() => {
 
     return{
         play,
-        selectedSpots,
         marker,
         minimaxScores
     }
@@ -110,7 +116,6 @@ const AI = (() => {
 
 
 const playerFactory = (marker) => {
-
     return {
         marker
     }
@@ -118,12 +123,16 @@ const playerFactory = (marker) => {
 
 
 
-
+// Main module for game flow and related checks
 const game = (() => {
     let gameOver = false
-    let againstComputer = true;
+    let againstComputer = false;
 
-    const startGame = () => {
+
+    const startGame = (mode) => {
+        if(mode == "ai"){
+            againstComputer = true;
+        }
         playerOne = playerFactory("X");
         againstComputer ? playerTwo = AI : playerTwo = playerFactory("O")
         currentPlayer = playerOne
@@ -132,10 +141,18 @@ const game = (() => {
 
     const playRound = (index) => {
         gameBoard.markBoard(index)
-        checkWinner();
+        checkGameStatus();
         currentPlayer === playerOne ? currentPlayer = playerTwo : currentPlayer = playerOne
-        if (againstComputer){
+        if (againstComputer && !gameOver){
             AI.play();
+        }
+    }
+
+    const checkGameStatus = () => {
+        if(checkWinner() !== undefined){
+            gameOver = true;
+            displayController.deactivateBoard();
+            displayController.declareWinner(checkWinner())
         }
     }
 
@@ -158,16 +175,27 @@ const game = (() => {
         }
     }
 
+    const restartGame = () => {
+        gameBoard.clearBoard();
+        displayController.reActivateBoard();
+        gameOver = false;
+    }
+
+
     return {
         playRound,
         startGame, 
-        checkWinner
+        checkWinner,
+        checkGameStatus,
+        restartGame,
     }
 })();
 
+// Module for updating the display
 const displayController = (() => {
 
     let wrapper = document.querySelector('.game-board')
+    wrapper.addEventListener('animationend', () => wrapper.style.animation = "")
 
     const setupBoard = () => {
         wrapper.innerHTML = ""
@@ -181,21 +209,42 @@ const displayController = (() => {
 
     const markSpot = (index) => {
         let spot = document.querySelector(`div[data-index = "${index}"]`)
-        spot.innerHTML = currentPlayer.marker
+        spot.innerHTML = currentPlayer.marker;
+        wrapper.style.animation = "shakeBoard 0.5s"
+    }
+
+    const reActivateBoard = () => {
+        wrapper.classList.remove('inactive');
+        document.getElementById('result-field').textContent  = ""
+        playAgain.style.display = "block"
     }
 
     const deactivateBoard = () => {
         wrapper.classList.add('inactive')
     }
 
+    const declareWinner = (result) => {
+        let resultField = document.getElementById('result-field')
+        if(result !== "tie"){
+            resultField.textContent = `"${result}" wins!`
+        }else{
+            resultField.textContent = `${result}!`
+        }
+        playAgain.style.display = "block"
+    }
+
+
     return {
         setupBoard,
         deactivateBoard,
-        markSpot
+        reActivateBoard,
+        markSpot,
+        declareWinner
     }
 })();
 
 
+// Sets event listeners after initial board setup
 const setListeners = () => {
     document.querySelectorAll('.game-board div').forEach(div => {
         div.addEventListener('click', () => {
@@ -203,6 +252,8 @@ const setListeners = () => {
         })
     })
 }
+
+
 
 
 

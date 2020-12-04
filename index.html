@@ -3,14 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="style.css">
-    <title>Document</title>
+    <link rel="stylesheet" href="style/style.css">
+    <link rel="stylesheet" href="style/audio.css">
+    <title>Tic-Tac-Toe</title>
 </head>
 <body>
-<section class="game-board">
-</section>
-<button>Start</button>
-<script src="main.js"></script>
-<script src="game.js"></script>
+    <h1>Tic-Tac-Toe!</h1>
+    <p id = "result-field"></p>
+    <button id = "play-again">Play Again?</button>
+    <section class="game-board">
+    </section>
+    <div class="modal-wrapper">
+        <div class="game-menu">
+            <h2>Welcome!</h2>
+            <p id = "select-mode">Please select a game mode...</p>
+            <div class="buttons">
+                <button id = "p2p-button">Two Players</button>
+                <button id = "ai-button">
+                    Player vs AI
+                    <span>powered by<br> minimax algorithm</span>
+                </button>
+            </div>
+        </div>
+    </div>
+    <div class="music-control">
+        <button id = "stop-music">Stop Music</button>
+        <input type="range" name="" id="volume" min="0" max="1" step="0.2" value = "0.2">
+    </div>
+    <audio src="music.mp3"></audio>
+    
+    <script src="js/game.js"></script>
+    <script src="js/main.js"></script>
 </body>
 </html>

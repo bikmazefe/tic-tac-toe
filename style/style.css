@@ -1,0 +1,167 @@
+@font-face {
+    font-family: 'Atari';
+    src: url(../fonts/AtariClassic-gry3.ttf);
+  }
+
+
+body{
+    font-family: 'Atari';
+    background-image: linear-gradient(to top, #3f51b1 0%, #5a55ae 13%, #7b5fac 25%, #8f6aae 38%, #a86aa4 50%, #cc6b8e 62%, #f18271 75%, #f3a469 87%, #f7c978 100%);
+    height: 100vh;
+    text-align: center;
+    padding: 20px;
+    color: white;
+}
+
+h1{
+    padding: 20px 0;
+    border-bottom: 5px dashed white;
+}
+
+
+.modal-wrapper{
+    position: fixed;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.671);
+    animation: openModal 0.7s forwards;
+}
+
+.game-menu{
+    height: 400px;
+    width: 400px;
+    background-color: #060c2bc0;
+    border-radius: 10px;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    
+}
+
+.game-menu h2{
+    margin-top: 50px;
+}
+
+.game-menu p{
+    font-size: 13px;
+    margin-top: 50px;
+}
+
+#select-mode{
+    animation: blink 0.5s alternate;
+    animation-iteration-count: infinite;
+}
+
+.game-menu .buttons{
+    margin-top: 50px;
+}
+
+.game-menu button, #play-again{
+    font-family: 'Atari';
+    padding: 10px;
+    background: none;
+    color: inherit;
+    font-size: 11px;
+}
+
+#play-again{
+    display: none;
+    margin: 0 auto;
+}
+
+#ai-button{
+    position: relative;
+}
+
+#ai-button span{
+    position: absolute;
+    top: 140%;
+    right: 0%;
+    font-size: 8px;
+    color: red;
+    border-top: white 1px dashed;
+    padding: 5px;
+    line-height: 16px;
+}
+
+.game-menu button:hover, #play-again:hover{
+    transform: translateY(-5px);
+    cursor: pointer;
+}
+
+
+#result-field{
+    font-size: 42px;
+    text-align: center;
+    color: red;
+}
+
+
+.game-board{
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    grid-template-rows: repeat(3,1fr);
+    justify-items: center;
+    width: 360px;
+    height: 360px;
+    animation-iteration-count: 1;
+    margin: 50px auto;
+}
+
+.game-board div{
+    height: 120px;
+    width: 120px;
+    border: 5px dashed #3144ac;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 60px;
+    transition: 0.7s all ease-in;
+}
+
+.inactive{
+    pointer-events: none;
+    opacity: 0.3;
+}
+
+  
+
+@keyframes openModal{
+    from{
+        opacity: 0;
+        transform: scale(0.1);
+    }
+    to{
+        opacity: 1;
+        transform: scale(1);
+    }
+}
+
+@keyframes blink{
+    from{
+       opacity: 0;
+    }
+    to{
+        opacity: 1;
+    }
+
+}
+
+@keyframes shakeBoard{
+    0% { transform: translate(1px, 1px) rotate(0deg); }
+    10% { transform: translate(-1px, -2px) rotate(-1deg); }
+    20% { transform: translate(-3px, 0px) rotate(1deg); }
+    30% { transform: translate(3px, 2px) rotate(0deg); }
+    40% { transform: translate(1px, -1px) rotate(1deg); }
+    50% { transform: translate(-1px, 2px) rotate(-1deg); }
+    60% { transform: translate(-3px, 1px) rotate(0deg); }
+    70% { transform: translate(3px, 1px) rotate(-1deg); }
+    80% { transform: translate(-1px, -1px) rotate(1deg); }
+    90% { transform: translate(1px, 2px) rotate(0deg); }
+    100% { transform: translate(1px, -2px) rotate(-1deg); }
+}
